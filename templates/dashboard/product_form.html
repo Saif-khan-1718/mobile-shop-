@@ -1,0 +1,25 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<a class="back" href="{% url 'dashboard_products' %}">Back to products</a>
+<h1 class="dash-title">{{ title }}</h1>
+<p class="muted">Fill the details and upload a photo. It will appear in the selected category on the shop.</p>
+
+<form method="post" enctype="multipart/form-data" class="dash-form dash-form-wide">
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+    {% for field in form %}
+        <label class="{% if field.field.widget.input_type == 'checkbox' %}dash-check{% endif %}">
+            {{ field.label }}
+            {{ field }}
+            {% if field.errors %}<span class="dash-error">{{ field.errors.0 }}</span>{% endif %}
+        </label>
+        {% if field.name == 'main_image' and product and product.main_image %}
+            <img class="dash-preview" src="{{ product.main_image.url }}" alt="Current photo">
+        {% endif %}
+    {% endfor %}
+    <button class="btn btn-dark dash-btn" type="submit">Save product</button>
+</form>
+{% endblock %}

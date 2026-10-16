@@ -1,0 +1,68 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}Categories{% endblock %}
+
+{% block content %}
+<div class="dash-page-head">
+    <div>
+        <h1 class="dash-title">Categories</h1>
+        <p class="muted">These sections appear on the home page. Lower display order shows first.</p>
+    </div>
+    <a class="btn btn-dark dash-btn" href="{% url 'dashboard_category_new' %}">Add category</a>
+</div>
+
+<div class="dash-table-wrap">
+    <table class="dash-table">
+        <thead>
+            <tr>
+                <th>Order</th>
+                <th>Name</th>
+                <th>Products</th>
+                <th>On website</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for category in categories %}
+                <tr>
+                    <td>{{ category.sort_order }}</td>
+                    <td>{{ category.name }}</td>
+                    <td>{{ category.product_total }}</td>
+                    <td>Yes</td>
+                    <td class="dash-row-actions">
+                        <a href="{% url 'dashboard_category_edit' category.pk %}">Edit</a>
+                        <a href="{% url 'dashboard_products' %}?category={{ category.slug }}">Products</a>
+                    </td>
+                </tr>
+            {% empty %}
+                <tr><td colspan="5">No live categories yet.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% if hidden_categories %}
+<h2 class="dash-subtitle">Hidden categories</h2>
+<p class="muted">These do not show on the shop. You can still edit or turn them back on.</p>
+<div class="dash-table-wrap">
+    <table class="dash-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Products</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for category in hidden_categories %}
+                <tr>
+                    <td>{{ category.name }}</td>
+                    <td>{{ category.product_total }}</td>
+                    <td><a href="{% url 'dashboard_category_edit' category.pk %}">Edit</a></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endif %}
+{% endblock %}

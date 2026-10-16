@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block title %}{{ product.name }} | Kaif Mobile{% endblock %}
+
+{% block content %}
+<div class="container">
+    <a class="back" href="{% url 'category_products' product.category.slug %}">Back to {{ product.category.name }}</a>
+
+    <div class="product-layout">
+        <div class="panel product-hero">
+            {% if product.main_image %}
+                <img src="{{ product.main_image.url }}" alt="{{ product.name }}">
+            {% else %}
+                <div class="no-image">No image available</div>
+            {% endif %}
+        </div>
+
+        <div class="panel">
+            <p class="muted">{{ product.category.name }}</p>
+            <h1 class="page-title">{{ product.name }}</h1>
+            <p>{{ product.description }}</p>
+
+            <p class="price" style="margin-top: 16px;">
+                ₹{{ product.price }}
+                {% if product.old_price %}
+                    <span class="old-price">₹{{ product.old_price }}</span>
+                {% endif %}
+            </p>
+
+            <div class="specs">
+                {% if product.size %}<div><strong>Size / capacity</strong><span>{{ product.size }}</span></div>{% endif %}
+                {% if product.color %}<div><strong>Color</strong><span>{{ product.color }}</span></div>{% endif %}
+                {% if product.material %}<div><strong>Material</strong><span>{{ product.material }}</span></div>{% endif %}
+                {% if product.finish %}<div><strong>Finish</strong><span>{{ product.finish }}</span></div>{% endif %}
+                {% if product.suitable_room %}<div><strong>Compatible with</strong><span>{{ product.suitable_room }}</span></div>{% endif %}
+                {% if product.usage %}<div><strong>Use</strong><span>{{ product.usage }}</span></div>{% endif %}
+            </div>
+
+            {% if product.in_stock %}
+                <p class="stock">In stock — {{ product.stock }} available</p>
+                <form method="post" action="{% url 'add_to_cart' product.slug %}">
+                    {% csrf_token %}
+                    <div class="qty-row">
+                        <label for="quantity">Quantity</label>
+                        <input id="quantity" name="quantity" type="number" value="1" min="1" max="{{ product.stock }}">
+                    </div>
+                    <div class="actions">
+                        <button class="btn btn-dark" type="submit">Add to cart</button>
+                        <a class="btn btn-light" href="{% url 'home' %}">Continue shopping</a>
+                    </div>
+                </form>
+            {% else %}
+                <p class="out-stock">Out of stock</p>
+                <a class="btn btn-light" href="{% url 'home' %}">Browse more products</a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,20 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<a class="back" href="{% url 'dashboard_categories' %}">Back to categories</a>
+<h1 class="dash-title">{{ title }}</h1>
+
+<form method="post" enctype="multipart/form-data" class="dash-form dash-form-wide">
+    {% csrf_token %}
+    {% for field in form %}
+        <label class="{% if field.field.widget.input_type == 'checkbox' %}dash-check{% endif %}">
+            {{ field.label }}
+            {{ field }}
+            {% if field.errors %}<span class="dash-error">{{ field.errors.0 }}</span>{% endif %}
+        </label>
+    {% endfor %}
+    <button class="btn btn-dark dash-btn" type="submit">Save category</button>
+</form>
+{% endblock %}

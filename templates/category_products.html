@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %}{{ category.name }} | Kaif Mobile{% endblock %}
+
+{% block content %}
+<div class="container">
+    <a class="back" href="{% url 'home' %}">Back to home</a>
+    <h1 class="page-title">{{ category.name }}</h1>
+    <p class="muted">
+        {% if category.description %}
+            {{ category.description }}
+        {% else %}
+            Browse {{ category.name }} for phones, earbuds, and everyday electronics.
+        {% endif %}
+    </p>
+
+    {% if products %}
+        <div class="product-grid" style="margin-top: 24px;">
+            {% for product in products %}
+                {% include "includes/product_card.html" %}
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="empty" style="margin-top: 24px;">
+            <h2>No products available</h2>
+            <p>This category is empty right now.</p>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

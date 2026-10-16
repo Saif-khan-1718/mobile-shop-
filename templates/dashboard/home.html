@@ -1,0 +1,77 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}Overview{% endblock %}
+
+{% block content %}
+<h1 class="dash-title">Store overview</h1>
+<p class="muted">Add products, change prices, and keep the website up to date.</p>
+
+<div class="dash-stats">
+    <article class="dash-stat">
+        <strong>{{ product_count }}</strong>
+        <span>Live products</span>
+    </article>
+    <article class="dash-stat">
+        <strong>{{ category_count }}</strong>
+        <span>Categories</span>
+    </article>
+    <article class="dash-stat">
+        <strong>{{ low_stock }}</strong>
+        <span>Low stock (5 or less)</span>
+    </article>
+    <article class="dash-stat">
+        <strong>{{ hidden_count }}</strong>
+        <span>Hidden products</span>
+    </article>
+</div>
+
+<div class="dash-actions">
+    <a class="btn btn-dark dash-btn" href="{% url 'dashboard_product_new' %}">Upload product</a>
+    <a class="btn btn-light dash-btn" href="{% url 'dashboard_products' %}">Manage prices</a>
+    <a class="btn btn-light dash-btn" href="{% url 'dashboard_category_new' %}">Add category</a>
+</div>
+
+<h2 class="dash-subtitle">Edit shop sections</h2>
+<p class="muted">Open a category to change its name, or manage the products inside it.</p>
+<div class="dash-category-cards">
+    {% for category in live_categories %}
+        <article class="dash-stat">
+            <strong>{{ category.name }}</strong>
+            <span>{{ category.product_total }} products</span>
+            <div class="dash-row-actions">
+                <a href="{% url 'dashboard_category_edit' category.pk %}">Edit section</a>
+                <a href="{% url 'dashboard_products' %}?category={{ category.slug }}">Edit products</a>
+                <a href="{% url 'dashboard_product_new' %}?category={{ category.slug }}">Add product</a>
+            </div>
+        </article>
+    {% empty %}
+        <p class="empty">No live categories yet.</p>
+    {% endfor %}
+</div>
+
+<h2 class="dash-subtitle">Recently added</h2>
+<div class="dash-table-wrap">
+    <table class="dash-table">
+        <thead>
+            <tr>
+                <th>Product</th>
+                <th>Category</th>
+                <th>Price</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for product in recent_products %}
+                <tr>
+                    <td>{{ product.name }}</td>
+                    <td>{{ product.category.name }}</td>
+                    <td>₹{{ product.price }}</td>
+                    <td><a href="{% url 'dashboard_product_edit' product.pk %}">Edit</a></td>
+                </tr>
+            {% empty %}
+                <tr><td colspan="4">No products yet. Upload the first one.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

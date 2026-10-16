@@ -1,0 +1,30 @@
+<article class="card">
+    {% if product.main_image %}
+        <img src="{{ product.main_image.url }}" alt="{{ product.name }}">
+    {% else %}
+        <div class="no-image">No image</div>
+    {% endif %}
+    <div class="card-body">
+        <h3>{{ product.name }}</h3>
+        <div class="badges">
+            {% if product.featured %}<span class="badge">Featured</span>{% endif %}
+            {% if product.bestseller %}<span class="badge">Bestseller</span>{% endif %}
+            {% if product.new_arrival %}<span class="badge">New</span>{% endif %}
+        </div>
+        {% if product.description %}
+            <p class="muted">{{ product.description|truncatewords:14 }}</p>
+        {% endif %}
+        <div class="price">
+            ₹{{ product.price }}
+            {% if product.old_price %}
+                <span class="old-price">₹{{ product.old_price }}</span>
+            {% endif %}
+        </div>
+        {% if product.in_stock %}
+            <p class="stock">In stock</p>
+        {% else %}
+            <p class="out-stock">Out of stock</p>
+        {% endif %}
+        <a class="btn btn-dark" href="{% url 'product_detail' product.slug %}">View product</a>
+    </div>
+</article>

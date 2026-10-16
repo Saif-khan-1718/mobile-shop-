@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}Kaif Mobile | Mobile accessories & earbuds{% endblock %}
+
+{% block content %}
+<section class="hero">
+    <div class="hero-inner">
+        <span class="eyebrow">Mobile shop</span>
+        <h1>Accessories, earbuds, and gadgets that just work.</h1>
+        <p>Shop cases, chargers, power banks, earbuds, and more. Built to browse comfortably on a phone or a Windows PC.</p>
+        <div class="hero-actions">
+            <a class="btn btn-primary" href="#shop">Shop now</a>
+            <a class="btn btn-ghost" href="{% url 'cart' %}">View cart</a>
+        </div>
+    </div>
+</section>
+
+<div class="container" id="shop">
+    <div class="category-strip" aria-label="Product categories">
+        {% for category in categories %}
+            <a class="category-chip" href="#category-{{ category.slug }}">{{ category.name }}</a>
+        {% empty %}
+            <span class="category-chip">Categories coming soon</span>
+        {% endfor %}
+    </div>
+
+    {% for category in categories %}
+        <section class="section" id="category-{{ category.slug }}">
+            <div class="section-head">
+                <div>
+                    <h2>{{ category.name }}</h2>
+                    {% if category.description %}
+                        <p class="muted">{{ category.description }}</p>
+                    {% endif %}
+                </div>
+                <a class="view-all" href="{% url 'category_products' category.slug %}">View all</a>
+            </div>
+
+            <div class="product-grid">
+                {% for product in category.products.all %}
+                    {% if product.is_active and forloop.counter <= 4 %}
+                        {% include "includes/product_card.html" %}
+                    {% endif %}
+                {% empty %}
+                    <div class="empty">No products in this category yet.</div>
+                {% endfor %}
+            </div>
+        </section>
+    {% empty %}
+        <div class="empty">
+            <h2>No products yet</h2>
+            <p>Add categories and products from the admin panel.</p>
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}

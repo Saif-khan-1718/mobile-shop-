@@ -1,0 +1,37 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign in | Kaif Mobile Admin</title>
+    <link rel="stylesheet" href="{% static 'css/shop.css' %}">
+    <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+</head>
+<body class="dash-login-page">
+    <main class="dash-login-card">
+        <p class="eyebrow">Kaif Mobile</p>
+        <h1>Store admin</h1>
+        <p class="muted">Sign in to add products, change prices, and update the shop.</p>
+        <form method="post" class="dash-form">
+            {% csrf_token %}
+            {% if request.GET.next %}
+                <input type="hidden" name="next" value="{{ request.GET.next }}">
+            {% endif %}
+            {% if form.non_field_errors %}
+                <p class="dash-flash dash-flash-error">{{ form.non_field_errors.0 }}</p>
+            {% endif %}
+            <label>
+                Username
+                {{ form.username }}
+            </label>
+            <label>
+                Password
+                {{ form.password }}
+            </label>
+            <button class="btn btn-dark" type="submit">Sign in</button>
+        </form>
+        <p class="muted"><a href="{% url 'home' %}">Back to shop</a></p>
+    </main>
+</body>
+</html>

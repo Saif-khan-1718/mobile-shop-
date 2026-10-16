@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}Cart | Kaif Mobile{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="page-title">Your cart</h1>
+
+    {% if cart_items %}
+        {% for item in cart_items %}
+            <article class="cart-item">
+                {% if item.product.main_image %}
+                    <img src="{{ item.product.main_image.url }}" alt="{{ item.product.name }}">
+                {% endif %}
+                <div>
+                    <h2>{{ item.product.name }}</h2>
+                    <p class="price">₹{{ item.product.price }}</p>
+                    <div class="qty-controls" aria-label="Change quantity">
+                        <a href="{% url 'decrease_quantity' item.product.slug %}" aria-label="Decrease quantity">−</a>
+                        <span>{{ item.quantity }}</span>
+                        <a href="{% url 'increase_quantity' item.product.slug %}" aria-label="Increase quantity">+</a>
+                    </div>
+                    <p style="margin-top: 10px;">
+                        <a class="remove" href="{% url 'remove_from_cart' item.product.slug %}">Remove</a>
+                    </p>
+                </div>
+                <p class="price">₹{{ item.subtotal }}</p>
+            </article>
+        {% endfor %}
+
+        <div class="cart-total">
+            <h2>Total: ₹{{ total }}</h2>
+            <p class="muted" style="margin: 10px 0 16px;">Checkout can be connected next. Your cart is saved in this browser session.</p>
+            <a class="btn btn-dark" href="{% url 'home' %}#shop">Keep shopping</a>
+        </div>
+    {% else %}
+        <div class="empty">
+            <h2>Your cart is empty</h2>
+            <p>Add earbuds, cases, chargers, or other gadgets to get started.</p>
+            <a class="btn btn-dark" href="{% url 'home' %}" style="margin-top: 16px; max-width: 280px;">Continue shopping</a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

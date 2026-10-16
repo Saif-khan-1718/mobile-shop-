@@ -1,0 +1,74 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}Products{% endblock %}
+
+{% block content %}
+<div class="dash-page-head">
+    <div>
+        <h1 class="dash-title">Products</h1>
+        <p class="muted">Upload items, change prices, stock, and what shows on the shop.</p>
+    </div>
+    <a class="btn btn-dark dash-btn" href="{% url 'dashboard_product_new' %}">Upload product</a>
+</div>
+
+<div class="dash-actions">
+    <a class="btn {% if not selected_category %}btn-dark{% else %}btn-light{% endif %} dash-btn" href="{% url 'dashboard_products' %}">All</a>
+    {% for category in categories %}
+        <a class="btn {% if selected_category == category.slug %}btn-dark{% else %}btn-light{% endif %} dash-btn" href="{% url 'dashboard_products' %}?category={{ category.slug }}">{{ category.name }}</a>
+    {% endfor %}
+</div>
+
+<form class="dash-filters" method="get">
+    <input class="dash-input" type="search" name="q" value="{{ query }}" placeholder="Search products">
+    {% if selected_category %}
+        <input type="hidden" name="category" value="{{ selected_category }}">
+    {% endif %}
+    <button class="btn btn-dark dash-btn" type="submit">Search</button>
+</form>
+
+<div class="dash-product-list">
+    {% for product in products %}
+        <article class="dash-product">
+            {% if product.main_image %}
+                <img src="{{ product.main_image.url }}" alt="">
+            {% else %}
+                <div class="dash-thumb-empty">No photo</div>
+            {% endif %}
+            <div class="dash-product-body">
+                <h2>{{ product.name }}</h2>
+                <p class="muted">{{ product.category.name }}{% if not product.is_active %} · Hidden{% endif %}</p>
+                <form method="post" action="{% url 'dashboard_product_quick' product.pk %}" class="dash-quick">
+                    {% csrf_token %}
+                    <label>
+                        Price ₹
+                        <input class="dash-input" type="number" name="price" min="0" step="0.01" value="{{ product.price }}">
+                    </label>
+                    <label>
+                        Old price ₹
+                        <input class="dash-input" type="number" name="old_price" min="0" step="0.01" value="{{ product.old_price|default_if_none:'' }}">
+                    </label>
+                    <label>
+                        Stock
+                        <input class="dash-input" type="number" name="stock" min="0" step="1" value="{{ product.stock }}">
+                    </label>
+                    <label class="dash-check">
+                        <input type="checkbox" name="is_active" {% if product.is_active %}checked{% endif %}>
+                        Show on website
+                    </label>
+                    <button class="btn btn-dark dash-btn" type="submit">Save</button>
+                </form>
+                <div class="dash-row-actions">
+                    <a href="{% url 'dashboard_product_edit' product.pk %}">Full edit</a>
+                    <a href="{% url 'product_detail' product.slug %}">View</a>
+                    <form method="post" action="{% url 'dashboard_product_delete' product.pk %}" onsubmit="return confirm('Remove this product?');">
+                        {% csrf_token %}
+                        <button type="submit" class="dash-danger">Delete</button>
+                    </form>
+                </div>
+            </div>
+        </article>
+    {% empty %}
+        <p class="empty">No products match this filter.</p>
+    {% endfor %}
+</div>
+{% endblock %}

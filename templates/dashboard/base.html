@@ -1,0 +1,39 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Store admin{% endblock %} | Kaif Mobile</title>
+    <link rel="stylesheet" href="{% static 'css/shop.css' %}">
+    <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+</head>
+<body class="dash-body">
+    <header class="dash-header">
+        <div class="dash-header-inner">
+            <a class="logo" href="{% url 'dashboard_home' %}">Kaif <span>Admin</span></a>
+            <nav class="dash-nav">
+                <a href="{% url 'dashboard_home' %}">Overview</a>
+                <a href="{% url 'dashboard_products' %}">Products</a>
+                <a href="{% url 'dashboard_categories' %}">Categories</a>
+                <a href="{% url 'home' %}">View shop</a>
+                <form method="post" action="{% url 'dashboard_logout' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="dash-link-btn">Sign out</button>
+                </form>
+            </nav>
+        </div>
+    </header>
+
+    <main class="dash-main">
+        {% if messages %}
+            <ul class="dash-messages">
+                {% for message in messages %}
+                    <li class="dash-flash dash-flash-{{ message.tags }}">{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+        {% block content %}{% endblock %}
+    </main>
+</body>
+</html>

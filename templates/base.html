@@ -1,0 +1,55 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Kaif Mobile{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/shop.css' %}">
+</head>
+<body>
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a class="logo" href="{% url 'home' %}">Kaif <span>Mobile</span></a>
+            <button
+                class="menu-toggle"
+                type="button"
+                aria-controls="site-nav"
+                aria-expanded="false"
+                aria-label="Open menu"
+            >
+                Menu
+            </button>
+            <nav class="site-nav" id="site-nav" aria-label="Main">
+                <a href="{% url 'home' %}">Home</a>
+                <a href="{% url 'home' %}#shop">Shop</a>
+                <a href="{% url 'home' %}#contact">Contact</a>
+                <a href="{% url 'dashboard_home' %}">Admin</a>
+                <a class="cart-link" href="{% url 'cart' %}">
+                    Cart
+                    {% if cart_count %}
+                        <span class="cart-count" aria-label="{{ cart_count }} items in cart">{{ cart_count }}</span>
+                    {% endif %}
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <main id="main">
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="site-footer" id="contact">
+        <div class="footer-inner">
+            <h2>Kaif Mobile</h2>
+            <p>Phone accessories, earbuds, chargers, and electronics — shop on your phone or computer.</p>
+            <p>WhatsApp / Call: <a href="tel:+919876543210">+91 98765 43210</a></p>
+            <p>© 2026 Kaif Mobile. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="{% static 'js/shop.js' %}"></script>
+</body>
+</html>
