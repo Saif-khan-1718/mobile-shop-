@@ -25,7 +25,7 @@ SECRET_KEY = os.getenv(
 DEBUG = env_bool("DEBUG", True)
 
 ALLOWED_HOSTS = [
-    "mobile-shop-3.onrender.com",
+    ".onrender.com",
     "localhost",
     "127.0.0.1",
 ]
